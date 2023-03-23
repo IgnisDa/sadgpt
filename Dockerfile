@@ -6,9 +6,8 @@ RUN cargo leptos build --release
 
 FROM debian:buster-slim
 COPY --from=builder /usr/src/app/target/server/release/sadgpt /usr/local/bin/sadgpt
-COPY --from=builder /usr/src/app/static /opt/static
-COPY --from=builder /usr/src/app/target/site/pkg /opt/
-COPY --from=builder /usr/src/app/Cargo.toml /opt/Cargo.toml
 WORKDIR /opt
-ENV RUST_LOG=info
+COPY --from=builder /usr/src/app/static ./static
+COPY --from=builder /usr/src/app/target/site/pkg ./
+COPY --from=builder /usr/src/app/Cargo.toml ./Cargo.toml
 CMD ["sadgpt"]
