@@ -55,16 +55,23 @@ struct Chat {
 
 #[component]
 fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
-    let apply_classes = if matches!(chat.belongs_to.get(), Participant::User) {
-        "bg-spt-user"
+    let (apply_classes, img_src) = if matches!(chat.belongs_to.get(), Participant::User) {
+        ("bg-spt-user", "/user.png")
     } else {
-        "bg-spt-system"
+        ("bg-spt-system", "/sadgpt.png")
     };
 
     view! {
         cx,
-        <div class={format!("{apply_classes} text-lg py-6 px-4")}>
-            <p class="text-spt-white max-w-lg mx-auto">{chat.content}</p>
+        <div
+            class={format!("{apply_classes} text-lg py-6 px-4")}
+        >
+            <div
+                class="max-w-lg mx-auto flex items-center justify-start items-center space-x-4"
+            >
+                <img src=img_src class="w-8 h-8"/>
+                <p class="text-spt-white">{chat.content}</p>
+            </div>
         </div>
     }
 }
@@ -75,7 +82,7 @@ fn Home(cx: Scope) -> impl IntoView {
         cx,
         vec![create_chat(
             cx,
-            "waaaa waaaa bahahaha moan sob sob waaaa waaaa?".to_string(),
+            "waaaa sniff bahahaha moan sob sob whimper?".to_string(),
             Participant::SadGpt,
         )],
     );
