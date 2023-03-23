@@ -106,37 +106,29 @@ fn Home(cx: Scope) -> impl IntoView {
         )],
     );
 
-    let input_element: NodeRef<Input> = create_node_ref(cx);
-    let div_element: NodeRef<Div> = create_node_ref(cx);
+    let input_element = create_node_ref::<Input>(cx);
+    let div_element = create_node_ref::<Div>(cx);
 
     let on_submit = move |ev: SubmitEvent| {
         ev.prevent_default();
         set_input_disabled(true);
         let value = input_element().expect("<input> to exist").value();
         if value == ":info" {
-            set_chats.update(|c| {
-                c.push(create_chat(cx, INFO_TEXT.to_owned(), Participant::Creator));
-            });
+            set_chats
+                .update(|c| c.push(create_chat(cx, INFO_TEXT.to_owned(), Participant::Creator)));
+            set_input_disabled(false);
         } else {
-            set_chats.update(|c| {
-                c.push(create_chat(cx, value, Participant::User));
-            });
+            set_chats.update(|c| c.push(create_chat(cx, value, Participant::User)));
             let new_chat = generate_random_response();
             let chat = create_chat(cx, format!("{new_chat}."), Participant::SadGpt);
             set_timeout(
                 move || {
-                    set_chats.update(|c| {
-                        c.push(chat);
-                    });
+                    let div = div_element().unwrap();
+                    set_chats.update(|c| c.push(chat));
                     set_input_disabled(false);
-                    input_element()
-                        .unwrap()
-                        .into_view(cx)
-                        .into_html_element(cx)
-                        .unwrap()
-                        .focus()
-                        .unwrap();
-                    let div = div_element().expect("<div> to exist");
+                    input_element().unwrap().focus().unwrap();
+                    // FIXME: This does not work as expected
+                    div.set_scroll_top(div.scroll_height());
                 },
                 Duration::from_secs(1),
             );
@@ -191,7 +183,7 @@ fn Home(cx: Scope) -> impl IntoView {
                 <p class="text-spt-white text-center">
                     "This site was created by "
                     <a href="https://www.twitter.com/IgnisDa" target="_blank">"IgnisDa. "</a>
-                    "Type `:info` to learn more."
+                    "Type " <span class="font-mono text-blue-400">":info"</span>" to learn more."
                 </p>
             </div>
         </main>
