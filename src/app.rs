@@ -1,5 +1,8 @@
 use leptos::*;
-use leptos::{ev::SubmitEvent, html::Input};
+use leptos::{
+    ev::SubmitEvent,
+    html::{Div, Input},
+};
 use leptos_meta::*;
 use leptos_router::*;
 use rand::{seq::SliceRandom, thread_rng, Rng};
@@ -104,11 +107,13 @@ fn Home(cx: Scope) -> impl IntoView {
     );
 
     let input_element: NodeRef<Input> = create_node_ref(cx);
+    let div_element: NodeRef<Div> = create_node_ref(cx);
+
     let on_submit = move |ev: SubmitEvent| {
         ev.prevent_default();
         set_input_disabled(true);
         let value = input_element().expect("<input> to exist").value();
-        let chat = if value == ":info" {
+        if value == ":info" {
             set_chats.update(|c| {
                 c.push(create_chat(cx, INFO_TEXT.to_owned(), Participant::Creator));
             });
@@ -124,6 +129,14 @@ fn Home(cx: Scope) -> impl IntoView {
                         c.push(chat);
                     });
                     set_input_disabled(false);
+                    input_element()
+                        .unwrap()
+                        .into_view(cx)
+                        .into_html_element(cx)
+                        .unwrap()
+                        .focus()
+                        .unwrap();
+                    let div = div_element().expect("<div> to exist");
                 },
                 Duration::from_secs(1),
             );
@@ -136,7 +149,7 @@ fn Home(cx: Scope) -> impl IntoView {
                 <h1 class="text-6xl font-semibold">"SadGPT"</h1>
                 <p class="italic text-sm">"What if ChatGPT was sad?"</p>
             </div>
-            <div class="pb-40">
+            <div class="pb-40" node_ref=div_element>
                 <ul>
                     <For
                         each=chats
