@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspaces/sadgpt:cached
+    command: sleep infinity
+    ports:
+      - '3000:3000'
+      - '3001:3001'
+    user: archlinux
+

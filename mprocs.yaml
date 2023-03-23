@@ -1,0 +1,5 @@
+procs:
+  Tailwind:
+    shell: "tailwind -i ./input.css -o ./style/output.css --watch"
+  App:
+    shell: "cargo leptos watch"
