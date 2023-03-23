@@ -44,16 +44,22 @@ struct Chat {
 
 #[component]
 fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
+    let apply_classes = if matches!(chat.belongs_to.get(), Participant::User) {
+        "bg-spt-user"
+    } else {
+        "bg-spt-system"
+    };
+
     view! {
         cx,
-        <p>{chat.content}</p>
+        <div class={format!("{apply_classes} text-lg py-6 px-4")}>
+            <p class="text-spt-white max-w-lg mx-auto">{chat.content}</p>
+        </div>
     }
 }
 
 #[component]
 fn Home(cx: Scope) -> impl IntoView {
-    let (count, set_count) = create_signal(cx, 0);
-
     let (chats, set_chats) = create_signal(
         cx,
         vec![Chat {
@@ -74,18 +80,30 @@ fn Home(cx: Scope) -> impl IntoView {
                     view= move |cx, chat: Chat| view! { cx, <Chat chat /> }
                 />
             </ul>
-            <button
-                class="bg-amber-600 hover:bg-sky-700 px-5 py-3 text-white rounded-lg"
-                on:click=move |_| set_count.update(|count| *count += 1)
-            >
-                "Something's here | "
-                {move || if count() == 0 {
-                    "Click me!".to_string()
-                } else {
-                    count().to_string()
-                }}
-                " | Some more text"
-            </button>
+            <div class="absolute bottom-6 w-full">
+                <form id="form" class="w-2/3 mx-auto flex items-center justify-center space-x-4">
+                    <input
+                        type="text"
+                        placeholder="Type your message here"
+                        class="bg-[#40414f] border-0 text-[#ececf1] rounded-md w-full text-lg p-2"
+                        autocomplete="off"
+                    />
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-6 h-6 text-spt-white"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                     />
+                    </svg>
+                </form>
+            </div>
         </main>
     }
 }
