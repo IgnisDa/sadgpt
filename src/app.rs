@@ -17,6 +17,7 @@ pub fn App(cx: Scope) -> impl IntoView {
         cx,
         <Stylesheet id="leptos" href="/pkg/sadgpt.css"/>
         <Link rel="shortcut icon" type_="image/ico" href="/favicon.ico"/>
+        <Title text="SadGPT" />
         <Router>
             <Routes>
                 <Route path="/" view=  move |cx| view! { cx, <Home/> }/>
