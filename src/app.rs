@@ -1,4 +1,6 @@
+use leptos::leptos_dom::console_log;
 use leptos::*;
+use leptos::{ev::SubmitEvent, html::Input};
 use leptos_meta::*;
 use leptos_router::*;
 use rand::{seq::SliceRandom, thread_rng, Rng};
@@ -71,6 +73,18 @@ fn Home(cx: Scope) -> impl IntoView {
         }],
     );
 
+    let input_element: NodeRef<Input> = create_node_ref(cx);
+    let on_submit = move |ev: SubmitEvent| {
+        ev.prevent_default();
+        let value = input_element().expect("<input> to exist").value();
+        set_chats.update(|c| {
+            c.push(Chat {
+                content: create_rw_signal(cx, value),
+                belongs_to: create_rw_signal(cx, Participant::User),
+            });
+        })
+    };
+
     view! { cx,
         <main class="bg-spt-bg min-h-screen">
             <ul>
@@ -81,27 +95,33 @@ fn Home(cx: Scope) -> impl IntoView {
                 />
             </ul>
             <div class="absolute bottom-6 w-full">
-                <form id="form" class="w-2/3 mx-auto flex items-center justify-center space-x-4">
+                <form
+                    class="w-2/3 mx-auto flex items-center justify-center space-x-4"
+                    on:submit=on_submit
+                >
                     <input
                         type="text"
+                        node_ref=input_element
                         placeholder="Type your message here"
                         class="bg-[#40414f] border-0 text-[#ececf1] rounded-md w-full text-lg p-2"
                         autocomplete="off"
                     />
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class="w-6 h-6 text-spt-white"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                     />
-                    </svg>
+                    <button type="submit">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="w-6 h-6 text-spt-white"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                         />
+                        </svg>
+                    </button>
                 </form>
             </div>
         </main>
