@@ -29,6 +29,7 @@ pub fn App(cx: Scope) -> impl IntoView {
         <Link rel="shortcut icon" type_="image/png" href="/sadgpt.png"/>
         <Link rel="preload" as_="image" href="/sadgpt.png" />
         <Link rel="preload" as_="image" href="/user.png" />
+        <Link rel="preload" as_="image" href="/creator.png" />
         <Title text="SadGPT" />
         <Router>
             <Routes>
@@ -155,8 +156,7 @@ fn Home(cx: Scope) -> impl IntoView {
                         placeholder="Type your message here"
                         class="bg-[#40414f] border-0 text-[#ececf1] rounded-md w-full text-lg p-2"
                         autocomplete="off"
-                        // FIXME: This does not work as expected
-                        // disabled=input_disabled
+                        disabled=input_disabled
                     />
                     <button type="submit">
                         <svg
