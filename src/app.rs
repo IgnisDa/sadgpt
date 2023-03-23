@@ -3,8 +3,11 @@ use leptos::{ev::SubmitEvent, html::Input};
 use leptos_meta::*;
 use leptos_router::*;
 use rand::{seq::SliceRandom, thread_rng, Rng};
+use std::time::Duration;
 
-const SAD_WORDS: [&str; 4] = ["waaaa", "bahahaha", "sob", "moan"];
+const SAD_WORDS: [&str; 7] = [
+    "waaaa", "whimper", "sign", "sniff", "bahahaha", "sob", "moan",
+];
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -31,7 +34,7 @@ fn create_chat(cx: Scope, content: String, belongs_to: Participant) -> Chat {
 
 fn generate_random_response() -> String {
     let mut rng = thread_rng();
-    let num_words = rng.gen_range(5..10);
+    let num_words = rng.gen_range(10..20);
     (0..num_words)
         .map(|_| SAD_WORDS.choose(&mut rng).unwrap().to_owned())
         .collect::<Vec<_>>()
@@ -83,7 +86,17 @@ fn Home(cx: Scope) -> impl IntoView {
         let value = input_element().expect("<input> to exist").value();
         set_chats.update(|c| {
             c.push(create_chat(cx, value, Participant::User));
-        })
+        });
+        let new_chat = generate_random_response();
+        let chat = create_chat(cx, format!("{new_chat}."), Participant::SadGpt);
+        set_timeout(
+            move || {
+                set_chats.update(|c| {
+                    c.push(chat);
+                });
+            },
+            Duration::from_secs(1),
+        );
     };
 
     view! { cx,
@@ -99,7 +112,7 @@ fn Home(cx: Scope) -> impl IntoView {
                     view= move |cx, chat: Chat| view! { cx, <Chat chat /> }
                 />
             </ul>
-            <div class="absolute bottom-6 w-full">
+            <div class="fixed bottom-6 w-full">
                 <form
                     class="w-2/3 mx-auto flex items-center justify-center space-x-4"
                     on:submit=on_submit
