@@ -135,7 +135,7 @@ fn Home(cx: Scope) -> impl IntoView {
                 <h1 class="text-6xl font-semibold">"SadGPT"</h1>
                 <p class="italic text-sm">"What if ChatGPT was sad?"</p>
             </div>
-            <div>
+            <div class="pb-40">
                 <ul>
                     <For
                         each=chats
