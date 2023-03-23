@@ -1,6 +1,6 @@
 FROM rust:latest as builder
 WORKDIR /usr/src/app
-RUN cargo install cargo-leptos@0.1.8
+RUN cargo install --locked cargo-leptos@0.1.8
 COPY . .
 RUN cargo leptos build --release
 

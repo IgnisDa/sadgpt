@@ -1,4 +1,4 @@
-# fly.toml file generated for sadgpt on 2023-03-23T16:25:21Z
+# fly.toml file generated for sadgpt on 2023-03-23T16:34:35Z
 
 app = "sadgpt"
 primary_region = "ord"
