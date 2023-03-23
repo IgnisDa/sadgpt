@@ -183,7 +183,7 @@ fn Home(cx: Scope) -> impl IntoView {
                 <p class="text-spt-white text-center">
                     "This site was created by "
                     <a href="https://www.twitter.com/IgnisDa" target="_blank">"IgnisDa. "</a>
-                    "Type " <span class="font-mono text-blue-400">":info"</span>" to learn more."
+                    "Type " <span class="font-mono text-blue-400 bg-gray-700 shadow-lg py-1 px-0.5 rounded">":info"</span>" to learn more."
                 </p>
             </div>
         </main>
