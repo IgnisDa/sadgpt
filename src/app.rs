@@ -17,6 +17,8 @@ pub fn App(cx: Scope) -> impl IntoView {
         cx,
         <Stylesheet id="leptos" href="/pkg/sadgpt.css"/>
         <Link rel="shortcut icon" type_="image/png" href="/sadgpt.png"/>
+        <Link rel="preload" as_="image" href="/sadgpt.png" />
+        <Link rel="preload" as_="image" href="/user.png" />
         <Title text="SadGPT" />
         <Router>
             <Routes>
@@ -70,7 +72,7 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
             <div
                 class="max-w-lg mx-auto flex items-center justify-start items-center space-x-4"
             >
-                <img src=img_src class="w-8 h-8"/>
+                <img src=img_src class="w-8 h-8 rounded-md"/>
                 <p class="text-spt-white">{chat.content}</p>
             </div>
         </div>
