@@ -5,6 +5,16 @@ use leptos_router::*;
 use rand::{seq::SliceRandom, thread_rng, Rng};
 use std::time::Duration;
 
+const INFO_TEXT: &str = r#"
+Hi! I'm Ignisda. I made this site for, to learn new technologies. It was inspired
+by <a href="https://catgpt.wvd.io" _target="_blank">CatGPT</a>. To be clear:
+this site does not actually use ChatGPT or any other form of AI. It just returns
+a random number of sad words. Nothing is done with your input either. If you
+want to know more, <a href="https://github.com/ignisda/sadgpt" target="_blank">
+check out the code on Github</a>, or send me a message on
+<a href="https://twitter.com/IgnisDa" target="_blank">Twitter</a>!
+"#;
+
 const SAD_WORDS: [&str; 7] = [
     "waaaa", "whimper", "sign", "sniff", "bahahaha", "sob", "moan",
 ];
@@ -46,6 +56,7 @@ fn generate_random_response() -> String {
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 enum Participant {
+    Creator,
     User,
     SadGpt,
 }
@@ -58,10 +69,10 @@ struct Chat {
 
 #[component]
 fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
-    let (apply_classes, img_src) = if matches!(chat.belongs_to.get(), Participant::User) {
-        ("bg-spt-user", "/user.png")
-    } else {
-        ("bg-spt-system", "/sadgpt.png")
+    let (apply_classes, img_src) = match chat.belongs_to.get() {
+        Participant::User => ("bg-spt-user", "/user.png"),
+        Participant::SadGpt => ("bg-spt-system", "/sadgpt.png"),
+        Participant::Creator => ("bg-spt-system", "/creator.png"),
     };
 
     view! {
@@ -70,10 +81,10 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
             class={format!("{apply_classes} text-lg py-6 px-4")}
         >
             <div
-                class="max-w-lg mx-auto flex items-center justify-start items-center space-x-4"
+                class="w-2/3 lg:w-3/5 mx-auto prose lg:prose-xl flex items-center justify-start items-center space-x-4"
             >
-                <img src=img_src class="w-8 h-8 rounded-md"/>
-                <p class="text-spt-white">{chat.content}</p>
+                <img src=img_src class="w-8 h-8 !mb-0 rounded-md"/>
+                <p class="text-spt-white !mt-0" inner_html={chat.content} />
             </div>
         </div>
     }
@@ -96,20 +107,26 @@ fn Home(cx: Scope) -> impl IntoView {
         ev.prevent_default();
         set_input_disabled(true);
         let value = input_element().expect("<input> to exist").value();
-        set_chats.update(|c| {
-            c.push(create_chat(cx, value, Participant::User));
-        });
-        let new_chat = generate_random_response();
-        let chat = create_chat(cx, format!("{new_chat}."), Participant::SadGpt);
-        set_timeout(
-            move || {
-                set_chats.update(|c| {
-                    c.push(chat);
-                });
-                set_input_disabled(false);
-            },
-            Duration::from_secs(1),
-        );
+        let chat = if value == ":info" {
+            set_chats.update(|c| {
+                c.push(create_chat(cx, INFO_TEXT.to_owned(), Participant::Creator));
+            });
+        } else {
+            set_chats.update(|c| {
+                c.push(create_chat(cx, value, Participant::User));
+            });
+            let new_chat = generate_random_response();
+            let chat = create_chat(cx, format!("{new_chat}."), Participant::SadGpt);
+            set_timeout(
+                move || {
+                    set_chats.update(|c| {
+                        c.push(chat);
+                    });
+                    set_input_disabled(false);
+                },
+                Duration::from_secs(1),
+            );
+        };
     };
 
     view! { cx,
@@ -118,16 +135,18 @@ fn Home(cx: Scope) -> impl IntoView {
                 <h1 class="text-6xl font-semibold">"SadGPT"</h1>
                 <p class="italic text-sm">"What if ChatGPT was sad?"</p>
             </div>
-            <ul>
-                <For
-                    each=chats
-                    key=|chat| chat.content
-                    view= move |cx, chat: Chat| view! { cx, <Chat chat /> }
-                />
-            </ul>
-            <div class="fixed bottom-6 w-full">
+            <div>
+                <ul>
+                    <For
+                        each=chats
+                        key=|chat| chat.content
+                        view= move |cx, chat: Chat| view! { cx, <Chat chat /> }
+                    />
+                </ul>
+            </div>
+            <div class="fixed bottom-6 w-full space-y-5">
                 <form
-                    class="w-2/3 mx-auto flex items-center justify-center space-x-4"
+                    class="w-4/5 md:w-2/3 mx-auto flex items-center justify-center space-x-4"
                     on:submit=on_submit
                 >
                     <input
@@ -156,6 +175,11 @@ fn Home(cx: Scope) -> impl IntoView {
                         </svg>
                     </button>
                 </form>
+                <p class="text-spt-white text-center">
+                    "This site was created by "
+                    <a href="https://www.twitter.com/IgnisDa" target="_blank">"IgnisDa. "</a>
+                    "Type `:info` to learn more."
+                </p>
             </div>
         </main>
     }

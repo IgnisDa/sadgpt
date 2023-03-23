@@ -1,7 +1,7 @@
 FROM ignisda/archlinux:latest
 
 USER root
-RUN npm install --global sass tailwindcss
+RUN npm install --global sass
 
 USER $USERNAME
 RUN curl -L https://fly.io/install.sh | sh

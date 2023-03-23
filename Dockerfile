@@ -8,6 +8,6 @@ FROM debian:buster-slim
 COPY --from=builder /usr/src/app/target/server/release/sadgpt /usr/local/bin/sadgpt
 WORKDIR /opt
 COPY --from=builder /usr/src/app/static ./static
-COPY --from=builder /usr/src/app/target/site/pkg ./
+COPY --from=builder /usr/src/app/target/site/pkg ./pkg
 COPY --from=builder /usr/src/app/Cargo.toml ./Cargo.toml
 CMD ["sadgpt"]
