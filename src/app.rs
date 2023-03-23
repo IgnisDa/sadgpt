@@ -1,6 +1,9 @@
 use leptos::*;
 use leptos_meta::*;
 use leptos_router::*;
+use rand::{seq::SliceRandom, thread_rng, Rng};
+
+const SAD_WORDS: [&str; 4] = ["waaaa", "bahahaha", "sob", "moan"];
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -22,13 +25,16 @@ pub fn App(cx: Scope) -> impl IntoView {
 fn Home(cx: Scope) -> impl IntoView {
     let (count, set_count) = create_signal(cx, 0);
 
+    let mut rng = thread_rng();
+    let num_words = rng.gen_range((5..10));
+    let first_chat = (0..num_words)
+        .map(|_| SAD_WORDS.choose(&mut rng).unwrap().to_owned())
+        .collect::<Vec<_>>()
+        .join(" ");
+    let (chats, set_chats) = create_signal(cx, vec![first_chat]);
+
     view! { cx,
-        <main class="my-0 bg-spt-bg mx-auto text-center min-h-screen">
-            <h2 class="p-6 text-4xl text-red-600">"Welcome to Leptos with Tailwind"</h2>
-            <p class="px-10 pb-10 text-left">
-                "Tailwind will scan your Rust files for Tailwind class names
-                and compile them into a CSS file."
-            </p>
+        <main class="bg-spt-bg min-h-screen">
             <button
                 class="bg-amber-600 hover:bg-sky-700 px-5 py-3 text-white rounded-lg"
                 on:click=move |_| set_count.update(|count| *count += 1)
