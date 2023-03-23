@@ -81,6 +81,7 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
 
 #[component]
 fn Home(cx: Scope) -> impl IntoView {
+    let (input_disabled, set_input_disabled) = create_signal(cx, false);
     let (chats, set_chats) = create_signal(
         cx,
         vec![create_chat(
@@ -93,6 +94,7 @@ fn Home(cx: Scope) -> impl IntoView {
     let input_element: NodeRef<Input> = create_node_ref(cx);
     let on_submit = move |ev: SubmitEvent| {
         ev.prevent_default();
+        set_input_disabled(true);
         let value = input_element().expect("<input> to exist").value();
         set_chats.update(|c| {
             c.push(create_chat(cx, value, Participant::User));
@@ -104,6 +106,7 @@ fn Home(cx: Scope) -> impl IntoView {
                 set_chats.update(|c| {
                     c.push(chat);
                 });
+                set_input_disabled(false);
             },
             Duration::from_secs(1),
         );
@@ -133,6 +136,8 @@ fn Home(cx: Scope) -> impl IntoView {
                         placeholder="Type your message here"
                         class="bg-[#40414f] border-0 text-[#ececf1] rounded-md w-full text-lg p-2"
                         autocomplete="off"
+                        // FIXME: This does not work as expected
+                        // disabled=input_disabled
                     />
                     <button type="submit">
                         <svg
