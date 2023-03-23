@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       colors: {
         'spt': {
+          'creator': '#3b3c48',
           'bg': '#343541',
           'system': '#444654',
           'user': '#343541',

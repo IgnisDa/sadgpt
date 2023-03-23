@@ -6,7 +6,7 @@ use rand::{seq::SliceRandom, thread_rng, Rng};
 use std::time::Duration;
 
 const INFO_TEXT: &str = r#"
-Hi! I'm Ignisda. I made this site for, to learn new technologies. It was inspired
+Hi! I'm Ignisda. I made this site to learn new technologies. It was inspired
 by <a href="https://catgpt.wvd.io" _target="_blank">CatGPT</a>. To be clear:
 this site does not actually use ChatGPT or any other form of AI. It just returns
 a random number of sad words. Nothing is done with your input either. If you
@@ -72,7 +72,7 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
     let (apply_classes, img_src) = match chat.belongs_to.get() {
         Participant::User => ("bg-spt-user", "/user.png"),
         Participant::SadGpt => ("bg-spt-system", "/sadgpt.png"),
-        Participant::Creator => ("bg-spt-system", "/creator.png"),
+        Participant::Creator => ("bg-spt-creator", "/creator.png"),
     };
 
     view! {
@@ -81,7 +81,7 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
             class={format!("{apply_classes} text-lg py-6 px-4")}
         >
             <div
-                class="w-2/3 lg:w-3/5 mx-auto prose lg:prose-xl flex items-center justify-start items-center space-x-4"
+                class="w-11/12 lg:w-3/5 mx-auto prose flex items-center justify-start items-center space-x-4"
             >
                 <img src=img_src class="w-8 h-8 !mb-0 rounded-md"/>
                 <p class="text-spt-white !mt-0" inner_html={chat.content} />
