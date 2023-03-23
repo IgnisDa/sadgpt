@@ -1,4 +1,3 @@
-use leptos::leptos_dom::console_log;
 use leptos::*;
 use leptos::{ev::SubmitEvent, html::Input};
 use leptos_meta::*;
@@ -17,9 +16,16 @@ pub fn App(cx: Scope) -> impl IntoView {
         <Link rel="shortcut icon" type_="image/ico" href="/favicon.ico"/>
         <Router>
             <Routes>
-                <Route path="" view=  move |cx| view! { cx, <Home/> }/>
+                <Route path="/" view=  move |cx| view! { cx, <Home/> }/>
             </Routes>
         </Router>
+    }
+}
+
+fn create_chat(cx: Scope, content: String, belongs_to: Participant) -> Chat {
+    Chat {
+        belongs_to: create_rw_signal(cx, belongs_to),
+        content: create_rw_signal(cx, content),
     }
 }
 
@@ -64,13 +70,11 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
 fn Home(cx: Scope) -> impl IntoView {
     let (chats, set_chats) = create_signal(
         cx,
-        vec![Chat {
-            belongs_to: create_rw_signal(cx, Participant::SadGpt),
-            content: create_rw_signal(
-                cx,
-                "waaaa waaaa bahahaha moan sob sob waaaa waaaa?".to_string(),
-            ),
-        }],
+        vec![create_chat(
+            cx,
+            "waaaa waaaa bahahaha moan sob sob waaaa waaaa?".to_string(),
+            Participant::SadGpt,
+        )],
     );
 
     let input_element: NodeRef<Input> = create_node_ref(cx);
@@ -78,15 +82,16 @@ fn Home(cx: Scope) -> impl IntoView {
         ev.prevent_default();
         let value = input_element().expect("<input> to exist").value();
         set_chats.update(|c| {
-            c.push(Chat {
-                content: create_rw_signal(cx, value),
-                belongs_to: create_rw_signal(cx, Participant::User),
-            });
+            c.push(create_chat(cx, value, Participant::User));
         })
     };
 
     view! { cx,
         <main class="bg-spt-bg min-h-screen">
+            <div class="text-spt-white py-5 text-center">
+                <h1 class="text-6xl font-semibold">"SadGPT"</h1>
+                <p class="italic text-sm">"What if ChatGPT was sad?"</p>
+            </div>
             <ul>
                 <For
                     each=chats
