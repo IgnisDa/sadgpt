@@ -9,7 +9,7 @@ use rand::{seq::SliceRandom, thread_rng, Rng};
 use std::time::Duration;
 
 const INFO_TEXT: &str = r#"
-Hi! I'm Ignisda. I made this site to learn new technologies. It was inspired
+Hi! I'm IgnisDa. I made this site to learn new technologies. It was inspired
 by <a href="https://catgpt.wvd.io" _target="_blank">CatGPT</a>. To be clear:
 this site does not actually use ChatGPT or any other form of AI. It just returns
 a random number of sad words. Nothing is done with your input either. If you
