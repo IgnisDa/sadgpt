@@ -177,10 +177,10 @@ fn Home(cx: Scope) -> impl IntoView {
                     </button>
                 </form>
                 <p class="text-spt-white text-center">
-                    "This site was created by "
-                    <a href="https://www.twitter.com/IgnisDa" target="_blank">
-                        "IgnisDa. "
-                    </a> "Type "
+                    "Created by "
+                    <a href="https://diptesh.me" target="_blank" class="underline">
+                        "IgnisDa"
+                    </a>". Type "
                     <span class="font-mono text-blue-400 bg-gray-700 shadow-lg py-1 px-0.5 rounded">
                         ":info"
                     </span> " to learn more."
