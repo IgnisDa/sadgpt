@@ -79,12 +79,18 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
     };
 
     view! { cx,
-        <div class={format!("{apply_classes} text-lg py-6 px-4")}>
-            <div class="w-11/12 lg:w-3/5 mx-auto prose flex items-center justify-start items-center space-x-4">
-                <img src=img_src class="w-8 h-8 !mb-0 rounded-md"/>
-                <p class="text-spt-white !mt-0" inner_html={chat.content}></p>
+        <li>
+            <div class={format!("{apply_classes} text-lg py-6 px-4")}>
+                <div class="w-11/12 lg:w-3/5 mx-auto prose flex items-center justify-start items-center space-x-4">
+                    <img
+                        src=img_src
+                        class="w-8 h-8 !mb-0 rounded-md"
+                        alt={format!("{:?} image", chat.belongs_to.get())}
+                    />
+                    <p class="text-spt-white !mt-0" inner_html={chat.content}></p>
+                </div>
             </div>
-        </div>
+        </li>
     }
 }
 
@@ -163,7 +169,8 @@ fn Home(cx: Scope) -> impl IntoView {
                         autocomplete="off"
                         disabled=input_disabled
                     />
-                    <button type="submit">
+                    <button type="submit" aria-label="Submit">
+                        <p class="sr-only">"Submit"</p>
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
