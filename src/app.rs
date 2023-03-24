@@ -26,17 +26,19 @@ const SAD_WORDS: [&str; 7] = [
 pub fn App(cx: Scope) -> impl IntoView {
     provide_meta_context(cx);
 
-    view! {
-        cx,
+    view! { cx,
         <Stylesheet id="leptos" href="/pkg/sadgpt.css"/>
         <Link rel="shortcut icon" type_="image/png" href="/sadgpt.png"/>
-        <Link rel="preload" as_="image" href="/sadgpt.png" />
-        <Link rel="preload" as_="image" href="/user.png" />
-        <Link rel="preload" as_="image" href="/creator.png" />
-        <Title text="SadGPT" />
+        <Link rel="preload" as_="image" href="/sadgpt.png"/>
+        <Title text="SadGPT"/>
         <Router>
             <Routes>
-                <Route path="/" view=  move |cx| view! { cx, <Home/> }/>
+                <Route
+                    path="/"
+                    view=move |cx| {
+                        view! { cx, <Home/> }
+                    }
+                />
             </Routes>
         </Router>
     }
@@ -79,16 +81,11 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
         Participant::Creator => ("bg-spt-creator", "/creator.png"),
     };
 
-    view! {
-        cx,
-        <div
-            class={format!("{apply_classes} text-lg py-6 px-4")}
-        >
-            <div
-                class="w-11/12 lg:w-3/5 mx-auto prose flex items-center justify-start items-center space-x-4"
-            >
+    view! { cx,
+        <div class={format!("{apply_classes} text-lg py-6 px-4")}>
+            <div class="w-11/12 lg:w-3/5 mx-auto prose flex items-center justify-start items-center space-x-4">
                 <img src=img_src class="w-8 h-8 !mb-0 rounded-md"/>
-                <p class="text-spt-white !mt-0" inner_html={chat.content} />
+                <p class="text-spt-white !mt-0" inner_html={chat.content}></p>
             </div>
         </div>
     }
@@ -146,7 +143,9 @@ fn Home(cx: Scope) -> impl IntoView {
                     <For
                         each=chats
                         key=|chat| chat.content
-                        view= move |cx, chat: Chat| view! { cx, <Chat chat /> }
+                        view=move |cx, chat: Chat| {
+                            view! { cx, <Chat chat/> }
+                        }
                     />
                 </ul>
             </div>
@@ -172,18 +171,22 @@ fn Home(cx: Scope) -> impl IntoView {
                             stroke="currentColor"
                             class="w-6 h-6 text-spt-white"
                         >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                         />
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                            ></path>
                         </svg>
                     </button>
                 </form>
                 <p class="text-spt-white text-center">
                     "This site was created by "
-                    <a href="https://www.twitter.com/IgnisDa" target="_blank">"IgnisDa. "</a>
-                    "Type " <span class="font-mono text-blue-400 bg-gray-700 shadow-lg py-1 px-0.5 rounded">":info"</span>" to learn more."
+                    <a href="https://www.twitter.com/IgnisDa" target="_blank">
+                        "IgnisDa. "
+                    </a> "Type "
+                    <span class="font-mono text-blue-400 bg-gray-700 shadow-lg py-1 px-0.5 rounded">
+                        ":info"
+                    </span> " to learn more."
                 </p>
             </div>
         </main>
