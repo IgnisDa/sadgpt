@@ -114,7 +114,9 @@ fn Home(cx: Scope) -> impl IntoView {
         set_input_disabled(true);
         let value = input_element().unwrap().value();
         input_element().unwrap().set_value("");
-        if value == ":info" {
+        if value == "" {
+            return;
+        } else if value == ":info" {
             set_chats
                 .update(|c| c.push(create_chat(cx, INFO_TEXT.to_owned(), Participant::Creator)));
             set_input_disabled(false);
@@ -128,7 +130,6 @@ fn Home(cx: Scope) -> impl IntoView {
                     set_chats.update(|c| c.push(chat));
                     set_input_disabled(false);
                     input_element().unwrap().focus().unwrap();
-                    // FIXME: This does not work as expected
                     div.set_scroll_top(div.scroll_height());
                 },
                 Duration::from_secs(1),
@@ -142,7 +143,7 @@ fn Home(cx: Scope) -> impl IntoView {
                 <h1 class="text-6xl font-semibold">"SadGPT"</h1>
                 <p class="italic text-sm">"What if ChatGPT was sad?"</p>
             </div>
-            <div class="pb-40" node_ref=div_element>
+            <div class="overflow-y-auto h-[580px] md:h-96" node_ref=div_element>
                 <ul>
                     <For
                         each=chats
