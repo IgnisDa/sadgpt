@@ -23,7 +23,7 @@ to see what they are.
 If you want superpowers, then install [mprocs](https://github.com/pvolok/mprocs),
 run `mprocs` and access the application at http://localhost:3000. If you do not
 want to, I'm sure you can look at [`mproc.yaml`](./mprocs.yaml) to figure out how
-to get it working :tm:.
+to get it working.
 
 ## Acknowledgements
 
