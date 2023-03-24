@@ -7,5 +7,5 @@ USER $USERNAME
 RUN rustup toolchain install nightly --allow-downgrade
 RUN rustup default nightly
 RUN rustup target add wasm32-unknown-unknown
-RUN cargo install --locked trunk cargo-generate cargo-make
+RUN cargo install --locked trunk
 
