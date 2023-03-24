@@ -41,7 +41,7 @@ cfg_if! {
             // Generate the list of routes in your Leptos App
             let routes = generate_route_list(|cx| view! { cx, <App/> });
 
-            println!("Started app on {addr:?}...");
+            println!("Started app on 'http://{addr}'...");
 
             HttpServer::new(move || {
                 let leptos_options = &conf.leptos_options;
