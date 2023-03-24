@@ -18,8 +18,8 @@ check out the code on Github</a>, or send me a message on
 <a href="https://twitter.com/IgnisDa" target="_blank">Twitter</a>!
 "#;
 
-const SAD_WORDS: [&str; 7] = [
-    "waaaa", "whimper", "sign", "sniff", "bahahaha", "sob", "moan",
+const SAD_WORDS: [&str; 8] = [
+    "waaaa", "whimper", "sigh", "sniff", "bahahaha", "sob", "moan", "bahahaha",
 ];
 
 #[component]
@@ -95,7 +95,7 @@ fn Home(cx: Scope) -> impl IntoView {
         cx,
         vec![create_chat(
             cx,
-            "waaaa sniff bahahaha moan sob sob whimper?".to_string(),
+            generate_random_response() + "?",
             Participant::SadGpt,
         )],
     );
