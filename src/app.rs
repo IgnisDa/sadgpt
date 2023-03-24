@@ -147,7 +147,10 @@ fn Home(cx: Scope) -> impl IntoView {
                     />
                 </ul>
             </div>
-            <div class="fixed bottom-6 w-full space-y-5">
+            <div
+                class="fixed pb-6 bottom-0 w-full space-y-5"
+                style="background-image: linear-gradient(180deg,rgba(53,55,64,0),#353740 58.85%)"
+            >
                 <form
                     class="w-4/5 md:w-2/3 mx-auto flex items-center justify-center space-x-4"
                     on:submit=on_submit
@@ -173,15 +176,14 @@ fn Home(cx: Scope) -> impl IntoView {
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                                 d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                            />
+                            ></path>
                         </svg>
                     </button>
                 </form>
                 <p class="text-spt-white text-center">
-                    "Created by "
-                    <a href="https://diptesh.me" target="_blank" class="underline">
+                    "Created by " <a href="https://diptesh.me" target="_blank" class="underline">
                         "IgnisDa"
-                    </a>". Type "
+                    </a> ". Type "
                     <span class="font-mono text-blue-400 bg-gray-700 shadow-lg py-1 px-0.5 rounded">
                         ":info"
                     </span> " to learn more."
