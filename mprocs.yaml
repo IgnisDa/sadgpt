@@ -2,4 +2,4 @@ procs:
   Tailwind:
     shell: "yarn tailwind -i ./input.css -o ./style/output.css --watch"
   App:
-    shell: "cargo leptos watch"
+    shell: "trunk serve --port 3000 --address 0.0.0.0"

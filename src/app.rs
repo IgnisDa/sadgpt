@@ -27,10 +27,7 @@ pub fn App(cx: Scope) -> impl IntoView {
     provide_meta_context(cx);
 
     view! { cx,
-        <Stylesheet id="leptos" href="/pkg/sadgpt.css"/>
-        <Link rel="shortcut icon" type_="image/png" href="/sadgpt.png"/>
-        <Link rel="preload" as_="image" href="/sadgpt.png"/>
-        <Title text="SadGPT"/>
+        <Link rel="preload" as_="image" href="/public/sadgpt.png"/>
         <Router>
             <Routes>
                 <Route
@@ -76,9 +73,9 @@ struct Chat {
 #[component]
 fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
     let (apply_classes, img_src) = match chat.belongs_to.get() {
-        Participant::User => ("bg-spt-user", "/user.png"),
-        Participant::SadGpt => ("bg-spt-system", "/sadgpt.png"),
-        Participant::Creator => ("bg-spt-creator", "/creator.png"),
+        Participant::User => ("bg-spt-user", "/public/user.png"),
+        Participant::SadGpt => ("bg-spt-system", "/public/sadgpt.png"),
+        Participant::Creator => ("bg-spt-creator", "/public/creator.png"),
     };
 
     view! { cx,
