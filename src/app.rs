@@ -111,12 +111,13 @@ fn Home(cx: Scope) -> impl IntoView {
 
     let on_submit = move |ev: SubmitEvent| {
         ev.prevent_default();
-        set_input_disabled(true);
         let value = input_element().unwrap().value();
-        input_element().unwrap().set_value("");
         if value == "" {
             return;
-        } else if value == ":info" {
+        };
+        set_input_disabled(true);
+        input_element().unwrap().set_value("");
+        if value == ":info" {
             set_chats
                 .update(|c| c.push(create_chat(cx, INFO_TEXT.to_owned(), Participant::Creator)));
             set_input_disabled(false);
