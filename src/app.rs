@@ -139,12 +139,12 @@ fn Home(cx: Scope) -> impl IntoView {
     };
 
     view! { cx,
-        <main class="bg-spt-bg min-h-screen">
-            <div class="text-spt-white py-5 text-center">
+        <main class="bg-spt-bg h-screen flex flex-col">
+            <div class="text-spt-white py-5 text-center flex-none">
                 <h1 class="text-6xl font-semibold">"SadGPT"</h1>
                 <p class="italic text-sm">"What if ChatGPT was sad?"</p>
             </div>
-            <div class="overflow-y-auto h-[580px] md:h-96" node_ref=div_element>
+            <div class="overflow-y-auto flex-grow pb-5" node_ref=div_element>
                 <ul>
                     <For
                         each=chats
@@ -155,10 +155,7 @@ fn Home(cx: Scope) -> impl IntoView {
                     />
                 </ul>
             </div>
-            <div
-                class="fixed pb-6 bottom-0 w-full space-y-5"
-                style="background-image: linear-gradient(180deg,rgba(53,55,64,0),#353740 58.85%)"
-            >
+            <div class="py-6 w-full space-y-5 flex-none">
                 <form
                     class="w-4/5 md:w-2/3 mx-auto flex items-center justify-center space-x-4"
                     on:submit=on_submit
