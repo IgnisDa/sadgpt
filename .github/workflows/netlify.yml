@@ -78,5 +78,5 @@ jobs:
           if [ $(git status --porcelain=v1 2>/dev/null | wc -l) != "0" ] ; then
             git add -f dist
             git commit -m "gh-actions deployed a new website build"
-            git push --force https://github.com/${GITHUB_ACTOR}/${GITHUB_REPOSITORY}.git HEAD:website-build
+            git push --force https://github.com/${GITHUB_REPOSITORY}.git HEAD:website-build
           fi
