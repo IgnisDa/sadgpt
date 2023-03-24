@@ -1,7 +1,9 @@
 FROM node:19.1.0 as style-builder
 WORKDIR /usr/src/app
-COPY . .
+COPY package.json yarn.lock .yarnrc.yml ./
+COPY ./.yarn ./.yarn
 RUN yarn install
+COPY . .
 RUN yarn tailwind --input ./input.css --output ./output.css --minify
 
 FROM rust:latest as app-builder

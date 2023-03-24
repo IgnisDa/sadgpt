@@ -11,7 +11,7 @@ module.exports = {
           'bg': '#343541',
           'system': '#444654',
           'user': '#343541',
-          'white': "#fbfbfb"
+          'white': "#fbfbfb",
         }
       }
     },

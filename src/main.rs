@@ -36,10 +36,14 @@ cfg_if! {
             // Setting this to None means we'll be using cargo-leptos and its env vars.
             let conf = get_configuration(None).await.unwrap();
 
-            let addr = conf.leptos_options.site_addr.clone();
+            // NOTE: I could not get it working with Fly for the life of me, so this hack
+            // let addr = conf.leptos_options.site_addr.clone();
+            let addr = "0.0.0.0:3000";
 
             // Generate the list of routes in your Leptos App
             let routes = generate_route_list(|cx| view! { cx, <App/> });
+
+            println!("Started app on {addr:?}...");
 
             HttpServer::new(move || {
                 let leptos_options = &conf.leptos_options;

@@ -2,6 +2,7 @@ FROM ignisda/archlinux:latest
 
 USER root
 RUN npm install --global sass
+RUN eget bram209/leptosfmt --to /usr/bin/leptosfmt
 
 USER $USERNAME
 RUN curl -L https://fly.io/install.sh | sh
