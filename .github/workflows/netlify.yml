@@ -1,0 +1,80 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: main
+    
+      - name: Use Rust
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: nightly
+            override: true
+            components: rustfmt, clippy
+
+      - name: Setup Rust dependencies
+        run: 
+          rustup target add wasm32-unknown-unknown
+          cargo install --locked trunk
+
+      - name: Cache cargo registry
+        uses: Swatinem/rust-cache@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 19.8.1
+          cache: yarn
+
+      - name: Install nodejs dependencies
+        shell: bash
+        run: yarn install --immutable
+      
+      - name: Build tailwind
+        run: yarn tailwind --input ./input.css --output ./style/output.css --minify
+      
+      - name: Build tailwind
+        run: trunk build --release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+
+  commit-build:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the repoitory
+        uses: actions/checkout@v3
+        with:
+          ref: website-build
+
+      - name: Configure Git
+        run: |
+          git config --global user.email ${GITHUB_ACTOR}@gmail.com
+          git config --global user.name ${GITHUB_ACTOR}
+
+      - name: Download website build
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+
+      - name: Commit and Push
+        run: |
+          if [ $(git status --porcelain=v1 2>/dev/null | wc -l) != "0" ] ; then
+            git add -f dist
+            git commit -m "gh-actions deployed a new website build"
+            git push --force https://${GITHUB_ACTOR}:$@github.com/${GITHUB_REPOSITORY}.git HEAD:website-build
+          fi
