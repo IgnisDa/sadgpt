@@ -9,6 +9,21 @@ cfg_if! {
         use leptos::*;
         use crate::app::*;
         use leptos_actix::{generate_route_list, LeptosRoutes};
+        use serde::Serialize;
+
+        #[derive(Serialize)]
+        struct HealthCheck {
+            message: String,
+            status: bool
+        }
+
+        async fn healthcheck() -> Result<impl Responder> {
+            let obj = HealthCheck {
+                message: "Pong".to_owned(),
+                status: true
+            };
+            Ok(web::Json(obj))
+        }
 
         #[get("/style.css")]
         async fn css() -> impl Responder {
@@ -32,6 +47,7 @@ cfg_if! {
                 let routes = &routes;
                 App::new()
                     .service(css)
+                    .route("/healthcheck", web::get().to(healthcheck))
                     .leptos_routes(leptos_options.to_owned(), routes.to_owned(), |cx| view! { cx, <App/> })
                     .service(Files::new("/", &site_root))
                     .wrap(middleware::Compress::default())
