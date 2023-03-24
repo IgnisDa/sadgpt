@@ -66,8 +66,8 @@ jobs:
 
       - name: Configure Git
         run: |
-          git config --global user.email ${GITHUB_ACTOR}@gmail.com
-          git config --global user.name ${GITHUB_ACTOR}
+          git config --global user.email 'sadgpt-bot@no-reply.com'
+          git config --global user.name 'SadGPT Bot'
 
       - name: Download website build
         uses: actions/download-artifact@v3
