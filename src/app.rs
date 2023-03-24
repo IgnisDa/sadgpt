@@ -7,6 +7,7 @@ use leptos_meta::*;
 use leptos_router::*;
 use rand::{seq::SliceRandom, thread_rng, Rng};
 use std::time::Duration;
+use uuid::Uuid;
 
 const INFO_TEXT: &str = r#"
 Hi! I'm IgnisDa. I made this site to learn new technologies. It was inspired
@@ -21,6 +22,37 @@ check out the code on Github</a>, or send me a message on
 const SAD_WORDS: [&str; 8] = [
     "waaaa", "whimper", "sigh", "sniff", "bahahaha", "sob", "moan", "bahahaha",
 ];
+
+#[derive(Debug, PartialEq, Eq, Clone)]
+enum Participant {
+    Creator,
+    User,
+    SadGpt,
+}
+
+#[derive(Debug, PartialEq, Eq, Clone)]
+struct Chat {
+    content: RwSignal<String>,
+    belongs_to: RwSignal<Participant>,
+    id: RwSignal<Uuid>,
+}
+
+fn create_chat(cx: Scope, content: String, belongs_to: Participant) -> Chat {
+    Chat {
+        id: create_rw_signal(cx, Uuid::new_v4()),
+        belongs_to: create_rw_signal(cx, belongs_to),
+        content: create_rw_signal(cx, content),
+    }
+}
+
+fn generate_random_response() -> String {
+    let mut rng = thread_rng();
+    let num_words = rng.gen_range(10..20);
+    (0..num_words)
+        .map(|_| SAD_WORDS.choose(&mut rng).unwrap().to_owned())
+        .collect::<Vec<_>>()
+        .join(" ")
+}
 
 #[component]
 pub fn App(cx: Scope) -> impl IntoView {
@@ -41,35 +73,6 @@ pub fn App(cx: Scope) -> impl IntoView {
     }
 }
 
-fn create_chat(cx: Scope, content: String, belongs_to: Participant) -> Chat {
-    Chat {
-        belongs_to: create_rw_signal(cx, belongs_to),
-        content: create_rw_signal(cx, content),
-    }
-}
-
-fn generate_random_response() -> String {
-    let mut rng = thread_rng();
-    let num_words = rng.gen_range(10..20);
-    (0..num_words)
-        .map(|_| SAD_WORDS.choose(&mut rng).unwrap().to_owned())
-        .collect::<Vec<_>>()
-        .join(" ")
-}
-
-#[derive(Debug, PartialEq, Eq, Clone)]
-enum Participant {
-    Creator,
-    User,
-    SadGpt,
-}
-
-#[derive(Debug, PartialEq, Eq, Clone)]
-struct Chat {
-    content: RwSignal<String>,
-    belongs_to: RwSignal<Participant>,
-}
-
 #[component]
 fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
     let (apply_classes, img_src) = match chat.belongs_to.get() {
@@ -79,7 +82,7 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
     };
 
     view! { cx,
-        <li>
+        <li data-chat-id={chat.id.get().to_string()}>
             <div class={format!("{apply_classes} text-lg py-6 px-4")}>
                 <div class="w-11/12 lg:w-3/5 mx-auto prose flex items-center justify-start items-center space-x-4">
                     <img
@@ -148,7 +151,7 @@ fn Home(cx: Scope) -> impl IntoView {
                 <ul>
                     <For
                         each=chats
-                        key=|chat| chat.content
+                        key=|chat| chat.id
                         view=move |cx, chat: Chat| {
                             view! { cx, <Chat chat/> }
                         }
