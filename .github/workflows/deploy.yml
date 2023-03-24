@@ -36,3 +36,5 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/ignisda/sadgpt:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
