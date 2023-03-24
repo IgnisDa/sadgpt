@@ -10,7 +10,7 @@ use std::time::Duration;
 use uuid::Uuid;
 
 const INFO_TEXT: &str = r#"
-Hi! I'm IgnisDa. I made this site to learn new technologies. It was inspired
+Hi! I'm IgnisDa. I made this site to learn new technologies. It was heavily inspired
 by <a href="https://catgpt.wvd.io" _target="_blank">CatGPT</a>. To be clear:
 this site does not actually use ChatGPT or any other form of AI. It just returns
 a random number of sad words. Nothing is done with your input either. If you
@@ -88,13 +88,13 @@ fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
     view! { cx,
         <li data-chat-id={chat.id.get().to_string()}>
             <div class={format!("{apply_classes} text-lg py-6 px-4")}>
-                <div class="w-11/12 lg:w-3/5 mx-auto prose flex items-center justify-start items-center space-x-4">
+                <div class="w-11/12 lg:w-3/5 mx-auto flex items-center justify-start items-center space-x-4">
                     <img
                         src=img_src
-                        class="w-8 h-8 !mb-0 rounded-md"
+                        class="w-8 h-8 rounded-md"
                         alt={format!("{:?} image", chat.belongs_to.get())}
                     />
-                    <p class="text-spt-white !mt-0" inner_html={chat.content}></p>
+                    <p class="text-spt-white !mt-0 prose-stone prose" inner_html={chat.content}></p>
                 </div>
             </div>
         </li>
