@@ -16,6 +16,7 @@ RUN cargo leptos build --release
 
 FROM debian:buster-slim
 ENV LEPTOS_OUTPUT_NAME="sadgpt"
+ENV LEPTOS_SITE_ADDR="0.0.0.0:3000"
 COPY --from=app-builder /usr/src/app/target/server/release/sadgpt /usr/local/bin/sadgpt
 WORKDIR /opt
 COPY --from=app-builder /usr/src/app/target/site ./
