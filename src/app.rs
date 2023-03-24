@@ -38,8 +38,10 @@ struct Chat {
 }
 
 fn create_chat(cx: Scope, content: String, belongs_to: Participant) -> Chat {
+    let id = Uuid::new_v4();
+    log::info!("Creating new chat with id={id:#?}");
     Chat {
-        id: create_rw_signal(cx, Uuid::new_v4()),
+        id: create_rw_signal(cx, id),
         belongs_to: create_rw_signal(cx, belongs_to),
         content: create_rw_signal(cx, content),
     }
@@ -48,10 +50,12 @@ fn create_chat(cx: Scope, content: String, belongs_to: Participant) -> Chat {
 fn generate_random_response() -> String {
     let mut rng = thread_rng();
     let num_words = rng.gen_range(10..20);
-    (0..num_words)
+    let resp = (0..num_words)
         .map(|_| SAD_WORDS.choose(&mut rng).unwrap().to_owned())
         .collect::<Vec<_>>()
-        .join(" ")
+        .join(" ");
+    log::info!("Generated random response with {num_words} words");
+    resp
 }
 
 #[component]
