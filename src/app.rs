@@ -1,3 +1,4 @@
+use gloo_timers::future::TimeoutFuture;
 use leptos::*;
 use leptos::{
     ev::SubmitEvent,
@@ -8,6 +9,7 @@ use leptos_router::*;
 use rand::{seq::SliceRandom, thread_rng, Rng};
 use std::time::Duration;
 use uuid::Uuid;
+use wasm_bindgen_futures::spawn_local;
 
 const INFO_TEXT: &str = r#"
 Hi! I'm IgnisDa. I made this site to learn new technologies. It was heavily inspired
@@ -132,6 +134,11 @@ fn Home(cx: Scope) -> impl IntoView {
             set_chats.update(|c| c.push(create_chat(cx, value, Participant::User)));
             let new_chat = generate_random_response();
             let chat = create_chat(cx, format!("{new_chat}."), Participant::SadGpt);
+            spawn_local(async {
+                TimeoutFuture::new(5000).await;
+                // Do something here after the one second timeout is up!
+                log::info!("Hello world");
+            });
             set_timeout(
                 move || {
                     let div = div_element().unwrap();
@@ -144,6 +151,15 @@ fn Home(cx: Scope) -> impl IntoView {
             );
         };
     };
+
+    // on load
+    // create_effect(cx, move |_| {
+    //     log::debug!("Oh no");
+    //     let a = input_element().unwrap();
+    //     if let Some(i) = input_element() {
+    //         i.focus().unwrap();
+    //     }
+    // });
 
     view! { cx,
         <main class="bg-spt-bg h-screen flex flex-col">
