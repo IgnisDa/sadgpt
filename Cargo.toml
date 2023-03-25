@@ -24,6 +24,8 @@ rand = { version = "0.8.5" }
 serde = { version = "1.0.158", features = ["derive"] }
 getrandom = { version = "0.2.8", features = ["js"] }
 uuid = { version = "1.3.0", features = ["js", "v4"] }
+wasm-bindgen-futures = "0.4.34"
+gloo-timers = { version = "0.2.6", features = ["futures"] }
 
 [profile.release]
 codegen-units = 1
