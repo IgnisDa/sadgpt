@@ -146,6 +146,15 @@ fn Home(cx: Scope) -> impl IntoView {
         };
     };
 
+    // on load
+    create_effect(cx, move |_| {
+        request_animation_frame(move || {
+            if let Some(i) = input_element() {
+                i.focus().unwrap();
+            }
+        });
+    });
+
     view! { cx,
         <main class="bg-spt-bg h-screen flex flex-col">
             <div class="text-spt-white py-5 text-center flex-none">
