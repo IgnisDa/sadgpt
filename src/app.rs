@@ -33,18 +33,18 @@ enum Participant {
 
 #[derive(Debug, PartialEq, Eq, Clone)]
 struct Chat {
-    content: RwSignal<String>,
-    belongs_to: RwSignal<Participant>,
-    id: RwSignal<Uuid>,
+    content: String,
+    belongs_to: Participant,
+    id: Uuid,
 }
 
-fn create_chat(cx: Scope, content: String, belongs_to: Participant) -> Chat {
+fn create_chat(content: String, belongs_to: Participant) -> Chat {
     let id = Uuid::new_v4();
     log::info!("Creating new chat with id={id:#?}");
     Chat {
-        id: create_rw_signal(cx, id),
-        belongs_to: create_rw_signal(cx, belongs_to),
-        content: create_rw_signal(cx, content),
+        id,
+        belongs_to,
+        content,
     }
 }
 
@@ -80,20 +80,20 @@ pub fn App(cx: Scope) -> impl IntoView {
 
 #[component]
 fn Chat(cx: Scope, chat: Chat) -> impl IntoView {
-    let (apply_classes, img_src) = match chat.belongs_to.get() {
+    let (apply_classes, img_src) = match chat.belongs_to {
         Participant::User => ("bg-spt-user", "/public/user.png"),
         Participant::SadGpt => ("bg-spt-system", "/public/sadgpt.png"),
         Participant::Creator => ("bg-spt-creator", "/public/creator.png"),
     };
 
     view! { cx,
-        <li data-chat-id={chat.id.get().to_string()}>
+        <li data-chat-id={chat.id.to_string()}>
             <div class={format!("{apply_classes} text-lg py-6 px-4")}>
                 <div class="w-11/12 lg:w-3/5 mx-auto flex items-center justify-start items-center space-x-4">
                     <img
                         src=img_src
                         class="w-8 h-8 rounded-md"
-                        alt={format!("{:?} image", chat.belongs_to.get())}
+                        alt={format!("{:?} image", chat.belongs_to)}
                     />
                     <p class="text-spt-white !mt-0 prose-stone prose" inner_html={chat.content}></p>
                 </div>
@@ -108,7 +108,6 @@ fn Home(cx: Scope) -> impl IntoView {
     let (chats, set_chats) = create_signal(
         cx,
         vec![create_chat(
-            cx,
             generate_random_response() + "?",
             Participant::SadGpt,
         )],
@@ -126,13 +125,12 @@ fn Home(cx: Scope) -> impl IntoView {
         set_input_disabled(true);
         input_element().unwrap().set_value("");
         if value == ":info" {
-            set_chats
-                .update(|c| c.push(create_chat(cx, INFO_TEXT.to_owned(), Participant::Creator)));
+            set_chats.update(|c| c.push(create_chat(INFO_TEXT.to_owned(), Participant::Creator)));
             set_input_disabled(false);
         } else {
-            set_chats.update(|c| c.push(create_chat(cx, value, Participant::User)));
+            set_chats.update(|c| c.push(create_chat(value, Participant::User)));
             let new_chat = generate_random_response();
-            let chat = create_chat(cx, format!("{new_chat}."), Participant::SadGpt);
+            let chat = create_chat(format!("{new_chat}."), Participant::SadGpt);
             set_timeout(
                 move || {
                     let div = div_element().unwrap();
